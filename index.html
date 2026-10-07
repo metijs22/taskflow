@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تسک‌فلو — سیستم مدیریت وظایف و پروژه‌ها">
+    <title>تسک‌فلو | مدیریت هوشمند وظایف</title>
+
+    <!-- فونت فارسی وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================
+   تسک‌فلو — استایل کامل
+   ============================ */
+
+/* ===== تنظیمات پایه و متغیرها ===== */
+:root {
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --secondary: #ec4899;
+    --secondary-light: #f472b6;
+    --bg-dark: #0f0f23;
+    --bg-darker: #0a0a1a;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --bg-card-hover: rgba(255, 255, 255, 0.08);
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%);
+    --gradient-text: linear-gradient(135deg, #818cf8 0%, #f472b6 100%);
+    --container-padding: 1.5rem;
+    --section-padding: 6rem;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+    --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.3);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+body {
+    font-family: 'Vazirmatn', 'Tahoma', 'Segoe UI', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.7;
+    overflow-x: hidden;
+    direction: rtl;
+    min-height: 100vh;
+    position: relative;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-light);
+}
+
+.bg-shapes {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+    width: 500px;
+    height: 500px;
+    background: var(--primary);
+    top: -100px;
+    right: -100px;
+}
+
+.shape-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--secondary);
+    bottom: -50px;
+    left: -50px;
+    animation-delay: -7s;
+}
+
+.shape-3 {
+    width: 350px;
+    height: 350px;
+    background: #06b6d4;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -14s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+    width: 100%;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+    transition: var(--transition);
+    background: rgba(15, 15, 35, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+}
+
+.navbar.scrolled {
+    background: rgba(15, 15, 35, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom-color: var(--glass-border);
+    padding: 0.7rem 0;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    transform: translateY(-2px);
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-sm);
+    color: white;
+    box-shadow: var(--shadow-glow);
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    position: relative;
+}
+
+.nav-links a:hover {
+    color: var(--text-primary);
+    background: var(--bg-card);
+}
+
+.nav-links a.nav-cta {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 0.6rem 1.5rem;
+    margin-right: 0.5rem;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.nav-links a.nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+    background: var(--gradient-primary);
+}
+
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.mobile-menu-btn:hover {
+    background: var(--bg-card);
+}
+
+.mobile-menu-btn span {
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+.mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 1rem;
+    right: 1rem;
+    background: rgba(15, 15, 35, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-card);
+    animation: slideDown 0.3s ease-out;
+}
+
+.mobile-menu.hidden {
+    display: none;
+}
+
+.mobile-menu a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.mobile-menu a:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    transition: var(--transition);
+}
+
+.glass-card:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+}
+
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 0 4rem;
+    position: relative;
+}
+
+.hero .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+}
+
+.gradient-text {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-desc {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.8rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+}
+
+.btn-secondary {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.btn-block {
+    width: 100%;
+    justify-content: center;
+}
+
+.hero-visual {
+    display: flex;
+    justify-content: center;
+}
+
+.hero-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 1.5rem;
+    transform: rotate(-2deg);
+}
+
+.hero-card:hover {
+    transform: rotate(0deg) translateY(-4px);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 1rem;
+}
+
+.card-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.card-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--glass-border);
+}
+
+.card-dots span:nth-child(1) { background: #ef4444; }
+.card-dots span:nth-child(2) { background: #f59e0b; }
+.card-dots span:nth-child(3) { background: #10b981; }
+
+.card-title {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.task-item:hover {
+    background: var(--bg-card-hover);
+}
+
+.task-check {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--glass-border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.task-item.done .task-check {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: white;
+}
+
+.task-text {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.task-item.done .task-text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.task-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--primary-light);
+    border-radius: var(--radius-full);
+}
+
+.section {
+    padding: var(--section-padding) 0;
+    position: relative;
+}
+
+.section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 4rem;
+}
+
+.section-tag {
+    display: inline-block;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    color: var(--primary-light);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.section-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.section-desc {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-card {
+    padding: 2rem;
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.icon-1 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.icon-2 { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+.icon-3 { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+.icon-4 { background: linear-gradient(135deg, #10b981, #059669); }
+.icon-5 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+.icon-6 { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.stats-card {
+    padding: 3rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    align-items: center;
+}
+
+.stat-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--primary-light);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 80px;
+    background: var(--glass-border);
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.pricing-card {
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.pricing-card.popular {
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+    transform: scale(1.05);
+}
+
+.pricing-card.popular:hover {
+    transform: scale(1.05) translateY(-4px);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -12px;
+    right: 50%;
+    transform: translateX(50%);
+    background: var(--gradient-primary);
+    color: white;
+    padding: 0.4rem 1.2rem;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pricing-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.pricing-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.pricing-price {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.price-amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.price-currency {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+.price-period {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.pricing-features {
+    list-style: none;
+    margin-bottom: 2rem;
+    flex: 1;
+}
+
+.pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.pricing-features li svg {
+    color: #10b981;
+    flex-shrink: 0;
+}
+
+.pricing-features li.disabled {
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.pricing-features li.disabled svg {
+    color: var(--text-muted);
+}
+
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.faq-item {
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    gap: 1rem;
+}
+
+.faq-question h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.faq-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 1.5rem;
+}
+
+.faq-answer p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    padding-bottom: 1.5rem;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 500px;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(180deg);
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: white;
+}
+
+.footer {
+    background: rgba(10, 10, 26, 0.8);
+    border-top: 1px solid var(--glass-border);
+    padding: 4rem 0 2rem;
+    margin-top: 4rem;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-desc {
+    color: var(--text-secondary);
+    margin: 1rem 0 1.5rem;
+    line-height: 1.8;
+    max-width: 300px;
+}
+
+.social-links {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.footer-col h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+}
+
+.footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer-col a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.footer-col a:hover {
+    color: var(--primary-light);
+    padding-right: 5px;
+}
+
+.contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.contact-list svg {
+    color: var(--primary-light);
+    flex-shrink: 0;
+}
+
+.footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid var(--glass-border);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.scroll-top {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transition);
+    z-index: 999;
+}
+
+.scroll-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+    .hero .container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+    }
+    .hero-content {
+        max-width: 100%;
+    }
+    .hero-buttons {
+        justify-content: center;
+    }
+    .hero-card {
+        max-width: 380px;
+        transform: rotate(0deg);
+    }
+    .stats-card {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    .stat-divider {
+        display: none;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --section-padding: 4rem;
+        --container-padding: 1rem;
+    }
+    .nav-links {
+        display: none;
+    }
+    .mobile-menu-btn {
+        display: flex;
+    }
+    .hero {
+        padding: 6rem 0 3rem;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+    .hero-desc {
+        font-size: 1rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .btn {
+        justify-content: center;
+    }
+    .stats-card {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.5rem;
+    }
+    .stat-number {
+        font-size: 2rem;
+    }
+    .pricing-card.popular {
+        transform: scale(1);
+    }
+    .pricing-card.popular:hover {
+        transform: translateY(-4px);
+    }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .scroll-top {
+        bottom: 1.5rem;
+        left: 1.5rem;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.75rem;
+    }
+    .section-title {
+        font-size: 1.5rem;
+    }
+    .feature-card,
+    .pricing-card {
+        padding: 1.5rem;
+    }
+    .faq-question {
+        padding: 1rem;
+    }
+    .faq-question h4 {
+        font-size: 0.95rem;
+    }
+    .faq-answer {
+        padding: 0 1rem;
+    }
+}
+
+@supports not (backdrop-filter: blur(20px)) {
+    .glass-card,
+    .navbar,
+    .mobile-menu {
+        background: rgba(15, 15, 35, 0.95);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 4px;
+}
+    </style>
+</head>
+<body>
+
+    <!-- ===== پس‌زمینه دکوراتیو ===== -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- ===== نوار ناوبری ===== -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 11 12 14 22 4"></polyline>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                </span>
+                <span class="logo-text">تسک‌فلو</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#home">خانه</a></li>
+                <li><a href="#features">ویژگی‌ها</a></li>
+                <li><a href="#stats">آمار</a></li>
+                <li><a href="#pricing">تعرفه‌ها</a></li>
+                <li><a href="#faq">سوالات</a></li>
+                <li><a href="#contact" class="nav-cta">تماس</a></li>
+            </ul>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="منو">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <div class="mobile-menu hidden" id="mobileMenu">
+            <a href="#home">خانه</a>
+            <a href="#features">ویژگی‌ها</a>
+            <a href="#stats">آمار</a>
+            <a href="#pricing">تعرفه‌ها</a>
+            <a href="#faq">سوالات</a>
+            <a href="#contact">تماس</a>
+        </div>
+    </nav>
+
+    <!-- ===== بخش هیرو ===== -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content reveal">
+                <span class="hero-badge">
+                    <span class="badge-dot"></span>
+                    نسخه ۲.۰ منتشر شد
+                </span>
+                <h1 class="hero-title">
+                    مدیریت وظایف، <span class="gradient-text">به سادگی یک نفس کشیدن</span>
+                </h1>
+                <p class="hero-desc">
+                    تسک‌فلو یک ابزار مدرن برای مدیریت پروژه‌ها و وظایف تیمی است. با رابط کاربری زیبا و امکانات پیشرفته، کار تیم خود را به سطح بالاتری ببرید.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-primary">
+                        شروع رایگان
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        مشاهده دمو
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual reveal">
+                <div class="glass-card hero-card">
+                    <div class="card-header">
+                        <div class="card-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="card-title">داشبورد پروژه</span>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-item done">
+                            <span class="task-check">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                            <span class="task-text">طراحی رابط کاربری</span>
+                        </div>
+                        <div class="task-item done">
+                            <span class="task-check">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </span>
+                            <span class="task-text">پیاده‌سازی API</span>
+                        </div>
+                        <div class="task-item active">
+                            <span class="task-check"></span>
+                            <span class="task-text">تست و دیباگ</span>
+                            <span class="task-badge">در حال انجام</span>
+                        </div>
+                        <div class="task-item">
+                            <span class="task-check"></span>
+                            <span class="task-text">انتشار نسخه نهایی</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== بخش ویژگی‌ها ===== -->
+    <section id="features" class="features section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">ویژگی‌ها</span>
+                <h2 class="section-title">همه چیز برای <span class="gradient-text">موفقیت تیم</span></h2>
+                <p class="section-desc">ابزارهای قدرتمندی که کار تیمی را لذت‌بخش‌تر و سریع‌تر می‌کنند</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon icon-1">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3>مدیریت یکپارچه</h3>
+                    <p>همه پروژه‌ها و وظایف خود را در یک مکان مدیریت کنید. بدون نیاز به ابزارهای متعدد.</p>
+                </div>
+
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon icon-2">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>همکاری تیمی</h3>
+                    <p>با اعضای تیم خود به صورت لحظه‌ای همکاری کنید. نظرات، فایل‌ها و اعلان‌ها همگی در یک‌جا.</p>
+                </div>
+
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon icon-3">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3>گزارش‌های تحلیلی</h3>
+                    <p>با گزارش‌های دقیق و نمودارهای تعاملی، عملکرد تیم را بسنجید و بهینه‌سازی کنید.</p>
+                </div>
+
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon icon-4">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h3>امنیت بالا</h3>
+                    <p>اطلاعات شما با رمزنگاری پیشرفته محافظت می‌شود. احراز هویت دو مرحله‌ای نیز پشتیبانی می‌شود.</p>
+                </div>
+
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon icon-5">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <h3>صرفه‌جویی در زمان</h3>
+                    <p>با اتوماسیون‌های هوشمند، کارهای تکراری را خودکار کنید و زمان بیشتری برای کارهای مهم داشته باشید.</p>
+                </div>
+
+                <div class="glass-card feature-card reveal">
+                    <div class="feature-icon icon-6">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h3>اپلیکیشن موبایل</h3>
+                    <p>در هر زمان و هر مکان به وظایف خود دسترسی داشته باشید. اپلیکیشن iOS و Android در دسترس است.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== بخش آمار ===== -->
+    <section id="stats" class="stats section">
+        <div class="container">
+            <div class="glass-card stats-card reveal">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-number counter" data-target="15000">۰</div>
+                    <div class="stat-label">کاربر فعال</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-number counter" data-target="50000">۰</div>
+                    <div class="stat-label">وظیفه تکمیل‌شده</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-number counter" data-target="120">۰</div>
+                    <div class="stat-label">کشور تحت پوشش</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                    </div>
+                    <div class="stat-number"><span class="counter" data-target="49">۰</span>.۸</div>
+                    <div class="stat-label">رضایت کاربران</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== بخش تعرفه‌ها ===== -->
+    <section id="pricing" class="pricing section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">تعرفه‌ها</span>
+                <h2 class="section-title">پلن مناسب <span class="gradient-text">خود را انتخاب کنید</span></h2>
+                <p class="section-desc">بدون هزینه پنهان، هر زمان که خواستید می‌توانید پلن خود را تغییر دهید</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- پلن رایگان -->
+                <div class="glass-card pricing-card reveal">
+                    <div class="pricing-header">
+                        <h3>رایگان</h3>
+                        <p>برای استفاده شخصی</p>
+                    </div>
+                    <div class="pricing-price">
+                        <span class="price-amount">۰</span>
+                        <span class="price-currency">تومان</span>
+                        <span class="price-period">/ ماهانه</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            حداکثر ۵ پروژه
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            ۲ گیگابایت فضای ذخیره‌سازی
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            پشتیبانی ایمیلی
+                        </li>
+                        <li class="disabled">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            گزارش‌های پیشرفته
+                        </li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary btn-block">شروع کنید</a>
+                </div>
+
+                <!-- پلن حرفه‌ای -->
+                <div class="glass-card pricing-card popular reveal">
+                    <div class="popular-badge">پیشنهاد ویژه</div>
+                    <div class="pricing-header">
+                        <h3>حرفه‌ای</h3>
+                        <p>برای تیم‌های کوچک</p>
+                    </div>
+                    <div class="pricing-price">
+                        <span class="price-amount">۹۹</span>
+                        <span class="price-currency">هزار تومان</span>
+                        <span class="price-period">/ ماهانه</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            پروژه‌های نامحدود
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            ۵۰ گیگابایت فضای ذخیره‌سازی
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            پشتیبانی ۲۴ ساعته
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            گزارش‌های پیشرفته
+                        </li>
+                    </ul>
+                    <a href="#" class="btn btn-primary btn-block">انتخاب پلن</a>
+                </div>
+
+                <!-- پلن سازمانی -->
+                <div class="glass-card pricing-card reveal">
+                    <div class="pricing-header">
+                        <h3>سازمانی</h3>
+                        <p>برای شرکت‌های بزرگ</p>
+                    </div>
+                    <div class="pricing-price">
+                        <span class="price-amount">سفارشی</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            همه امکانات حرفه‌ای
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            فضای نامحدود
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            مدیر اختصاصی حساب
+                        </li>
+                        <li>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            API اختصاصی
+                        </li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary btn-block">تماس با فروش</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== بخش سوالات متداول ===== -->
+    <section id="faq" class="faq section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">سوالات متداول</span>
+                <h2 class="section-title">پاسخ <span class="gradient-text">سوالات شما</span></h2>
+                <p class="section-desc">اگر پاسخ سوال خود را پیدا نکردید، با پشتیبانی تماس بگیرید</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="glass-card faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>چگونه می‌توانم ثبت‌نام کنم؟</h4>
+                        <span class="faq-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>ثبت‌نام در تسک‌فلو بسیار ساده است. کافیست روی دکمه «شروع رایگان» در بالای صفحه کلیک کنید و با وارد کردن ایمیل و رمز عبور، حساب کاربری خود را ایجاد کنید. بلافاصله می‌توانید از تمام امکانات پلن رایگان استفاده کنید.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>آیا می‌توانم پلن خود را ارتقا دهم؟</h4>
+                        <span class="faq-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>بله، شما در هر زمان می‌توانید پلن خود را ارتقا یا تنزل دهید. تغییرات بلافاصله اعمال می‌شود و هزینه آن به صورت روزانه محاسبه می‌گردد. هیچ تعهد بلندمدتی وجود ندارد.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>امنیت اطلاعات من چگونه تامین می‌شود؟</h4>
+                        <span class="faq-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>ما از رمزنگاری AES-256 برای محافظت از داده‌ها استفاده می‌کنیم. تمامی ارتباطات از طریق HTTPS انجام می‌شود. سرورهای ما در دیتاسنترهای معتبر جهانی قرار دارند و به صورت ۲۴ ساعته پایش می‌شوند.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>آیا اپلیکیشن موبایل دارید؟</h4>
+                        <span class="faq-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>بله، اپلیکیشن‌های ما برای هر دو سیستم‌عامل iOS و Android در دسترس هستند. می‌توانید از App Store یا Google Play آن‌ها را دانلود کنید. همچنین نسخه وب نیز کاملا ریسپانسیو است.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>چگونه می‌توانم پشتیبانی دریافت کنم؟</h4>
+                        <span class="faq-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>تیم پشتیبانی ما از طریق ایمیل، چت زنده و تلفن در دسترس است. کاربران پلن حرفه‌ای از پشتیبانی اولویت‌دار ۲۴ ساعته بهره‌مند می‌شوند. متوسط زمان پاسخگویی ما کمتر از ۲ ساعت است.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== فوتر ===== -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="#" class="logo">
+                        <span class="logo-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 11 12 14 22 4"></polyline>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                        </span>
+                        <span class="logo-text">تسک‌فلو</span>
+                    </a>
+                    <p class="footer-desc">ابزار مدرن مدیریت وظایف و پروژه‌ها برای تیم‌های حرفه‌ای</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="اینستاگرام">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="تلگرام">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 2L11 13"></path>
+                                <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="توییتر">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="لینکدین">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>محصول</h4>
+                    <ul>
+                        <li><a href="#features">ویژگی‌ها</a></li>
+                        <li><a href="#pricing">تعرفه‌ها</a></li>
+                        <li><a href="#">امنیت</a></li>
+                        <li><a href="#">به‌روزرسانی‌ها</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>شرکت</h4>
+                    <ul>
+                        <li><a href="#">درباره ما</a></li>
+                        <li><a href="#">فرصت‌های شغلی</a></li>
+                        <li><a href="#">وبلاگ</a></li>
+                        <li><a href="#contact">تماس با ما</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>تماس</h4>
+                    <ul class="contact-list">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            info@taskflow.ir
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                            ۰۲۱-۱۲۳۴۵۶۷۸
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            تهران، خیابان آزادی
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© ۱۴۰۳ تسک‌فلو. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== دکمه بازگشت به بالا ===== -->
+    <button class="scroll-top" id="scrollTopBtn" aria-label="بازگشت به بالا">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <script>
+        /* ============================
+   تسک‌فلو — اسکریپت کامل
+   ============================ */
+
+(function() {
+  'use strict';
+
+  // ===== انیمیشن Reveal هنگام اسکرول =====
+  const revealElements = document.querySelectorAll('.reveal');
+
+  const revealOnScroll = () => {
+    const windowHeight = window.innerHeight;
+    revealElements.forEach(el => {
+      const elementTop = el.getBoundingClientRect().top;
+      const revealPoint = 100;
+
+      if (elementTop < windowHeight - revealPoint) {
+        el.classList.add('active');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', revealOnScroll);
+  window.addEventListener('load', revealOnScroll);
+
+  // ===== Navbar اسکرول =====
+  const navbar = document.querySelector('.navbar');
+
+  const handleNavbarScroll = () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  };
+
+  window.addEventListener('scroll', handleNavbarScroll);
+
+  // ===== دکمه بازگشت به بالا =====
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+  const handleScrollTopBtn = () => {
+    if (window.scrollY > 500) {
+      scrollTopBtn.classList.add('visible');
+    } else {
+      scrollTopBtn.classList.remove('visible');
+    }
+  };
+
+  window.addEventListener('scroll', handleScrollTopBtn);
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ===== منوی موبایل =====
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  if (mobileMenuBtn && mobileMenu) {
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+  }
+
+  // ===== اسکرول نرم برای لینک‌های داخلی =====
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        const offsetTop = target.offsetTop - 80;
+        window.scrollTo({
+          top: offsetTop,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // ===== شمارنده اعداد (Counter Animation) =====
+  const counters = document.querySelectorAll('.counter');
+
+  const animateCounter = (el) => {
+    const target = parseInt(el.getAttribute('data-target'));
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+
+    const update = () => {
+      current += step;
+      if (current < target) {
+        el.textContent = Math.floor(current).toLocaleString('fa-IR');
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target.toLocaleString('fa-IR');
+      }
+    };
+    update();
+  };
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.animated) {
+        entry.target.dataset.animated = 'true';
+        animateCounter(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(counter => counterObserver.observe(counter));
+
+  // ===== لاگ خوش‌آمدگویی =====
+  console.log('%c✨ تسک‌فلو ', 'background: linear-gradient(135deg, #6366f1, #ec4899); color: white; padding: 10px 20px; border-radius: 8px; font-size: 16px; font-weight: bold;');
+  console.log('%cبه سایت ما خوش آمدید!', 'color: #818cf8; font-size: 14px;');
+
+})();
+
+// ===== تابع FAQ (برای دسترسی از onclick) =====
+function toggleFaq(element) {
+  const faqItem = element.closest('.faq-item');
+  if (faqItem) {
+    document.querySelectorAll('.faq-item.open').forEach(item => {
+      if (item !== faqItem) {
+        item.classList.remove('open');
+      }
+    });
+    faqItem.classList.toggle('open');
+  }
+}
+    </script>
+</body>
+</html>
